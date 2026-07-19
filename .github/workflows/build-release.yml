@@ -5,6 +5,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 # on:
 #   workflow_dispatch:
 #   push:
@@ -79,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
-          path: release-artifacts/
+          path: cat-vs-rat-game/release-artifacts/
 
   release:
     needs: build
@@ -95,6 +98,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release-artifacts/cat-vs-rat-game-windows/cat-vs-rat-game-windows.exe
-            release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos
             release-artifacts/cat-vs-rat-game-linux/cat-vs-rat-game-linux
+            release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos
