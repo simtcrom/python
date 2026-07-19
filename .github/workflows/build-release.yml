@@ -1,10 +1,16 @@
 name: Build release binaries
 
+# on:
+#   workflow_dispatch:
+#   release:
+#     types: [published]
+
 on:
   workflow_dispatch:
-  release:
-    types: [published]
-
+  push:
+    branches:
+      - main
+      
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -15,9 +21,9 @@ jobs:
           - os: ubuntu-latest
             artifact_name: cat-vs-rat-game-linux
             asset_name: cat-vs-rat-game-linux
-          - os: windows-latest
-            artifact_name: cat-vs-rat-game-windows
-            asset_name: cat-vs-rat-game-windows.exe
+          # - os: windows-latest
+          #   artifact_name: cat-vs-rat-game-windows
+          #   asset_name: cat-vs-rat-game-windows.exe
           - os: macos-latest
             artifact_name: cat-vs-rat-game-macos
             asset_name: cat-vs-rat-game-macos
@@ -39,22 +45,26 @@ jobs:
 
       - name: Create virtual environment and install project deps
         shell: bash
+        working-directory: cat-vs-rat-game
         run: |
           uv venv
           uv sync --group dev
 
       - name: Run tests
         shell: bash
+        working-directory: cat-vs-rat-game
         run: |
           uv run pytest -q
 
       - name: Build binary
         shell: bash
+        working-directory: cat-vs-rat-game
         run: |
           uv run pyinstaller --clean --windowed --onefile --name cat-vs-rat-game src/game.py
 
       - name: Prepare artifact
         shell: bash
+        working-directory: cat-vs-rat-game
         run: |
           mkdir -p release-artifacts
           if [ "$RUNNER_OS" = "Windows" ]; then
