@@ -59,6 +59,7 @@ jobs:
 
       - name: Prepare artifact
         shell: bash
+        working-directory: cat-vs-rat-game
         run: |
           mkdir -p release-artifacts
           if [ "$RUNNER_OS" = "Windows" ]; then
