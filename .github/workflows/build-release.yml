@@ -63,7 +63,7 @@ jobs:
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
-          uv run pyinstaller --clean --windowed --onefile --name cat-vs-rat-game src/game.py
+          uv run pyinstaller --clean --windowed --onedir --name cat-vs-rat-game src/game.py
 
       - name: Prepare artifact
         shell: bash
