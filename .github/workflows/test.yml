@@ -57,6 +57,18 @@ jobs:
         run: |
           uv run pyinstaller --clean --windowed --onefile --name cat-vs-rat-game src/game.py
 
+      - name: Prepare artifact
+        shell: bash
+        run: |
+          mkdir -p release-artifacts
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cp dist/cat-vs-rat-game.exe release-artifacts/${{ matrix.asset_name }}
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            cp dist/cat-vs-rat-game release-artifacts/${{ matrix.asset_name }}
+          else
+            cp dist/cat-vs-rat-game release-artifacts/${{ matrix.asset_name }}
+          fi
+
       - name: Print Hello
         run: |
           echo "1st Hello from GitHub Actions!"
