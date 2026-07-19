@@ -59,6 +59,18 @@ jobs:
         run: |
           uv run pytest -q
 
+      - name: Show pygame version
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          uv run python -c "import pygame; print(pygame.version.ver)"          
+
+      - name: Show packages
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          uv pip freeze
+
       - name: Show versions
         shell: bash
         working-directory: cat-vs-rat-game
