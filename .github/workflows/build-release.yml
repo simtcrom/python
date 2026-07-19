@@ -110,12 +110,18 @@ jobs:
         working-directory: cat-vs-rat-game
         run: |
           mkdir -p release-artifacts
+
           if [ "$RUNNER_OS" = "Windows" ]; then
             cp dist/cat-vs-rat-game.exe release-artifacts/${{ matrix.asset_name }}.exe
+
           elif [ "$RUNNER_OS" = "macOS" ]; then
-            cd dist && ditto -c -k --sequesterRsrc --keepParent dist/cat-vs-rat-game.app release-artifacts/${{ matrix.asset_name }}.zip
+            ditto -c -k --sequesterRsrc --keepParent \
+              dist/cat-vs-rat-game.app \
+              release-artifacts/${{ matrix.asset_name }}.zip
+
           else
-            cd dist && zip -r ../release-artifacts/${{ matrix.asset_name }}.zip cat-vs-rat-game
+            cd dist
+            zip -r ../release-artifacts/${{ matrix.asset_name }}.zip cat-vs-rat-game
           fi
 
       - name: Show zip size
