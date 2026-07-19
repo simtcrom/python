@@ -1,15 +1,15 @@
 name: Build release binaries
 
-# on:
-#   workflow_dispatch:
-#   release:
-#     types: [published]
-
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
+
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches:
+#       - main
       
 jobs:
   build:
