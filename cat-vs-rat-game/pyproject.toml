@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cat-vs-rat-game"
+version = "0.1.0"
+description = "A small pygame game written in Python."
+requires-python = ">=3.11"
+dependencies = [
+    "pygame==2.6.1"
+]
+
+[project.scripts]
+cat-vs-rat-game = "game:main"
+
+[tool.setuptools]
+py-modules = ["game"]
+package-dir = {"" = "src"}
+
+[tool.pyinstaller]
+onefile = true
+console = false
+windowed = true
+name = "cat-vs-rat-game"
+paths = ["src"]
+distpath = "dist"
+buildpath = "build"
+
+[dependency-groups]
+dev = [
+    "build>=1.2",
+    "pyinstaller>=6.0",
+    "pytest>=8.0",
+]
