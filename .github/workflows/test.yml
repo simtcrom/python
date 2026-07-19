@@ -45,6 +45,12 @@ jobs:
           uv venv
           uv sync --group dev
 
+      - name: Run tests
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          uv run pytest -q
+
       - name: Print Hello
         run: |
           echo "1st Hello from GitHub Actions!"
