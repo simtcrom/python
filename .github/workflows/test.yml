@@ -51,6 +51,12 @@ jobs:
         run: |
           uv run pytest -q
 
+      - name: Build binary
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          uv run pyinstaller --clean --windowed --onefile --name cat-vs-rat-game src/game.py
+
       - name: Print Hello
         run: |
           echo "1st Hello from GitHub Actions!"
