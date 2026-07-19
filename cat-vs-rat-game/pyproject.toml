@@ -19,7 +19,7 @@ py-modules = ["game"]
 package-dir = {"" = "src"}
 
 [tool.pyinstaller]
-onefile = false
+onefile = true
 console = false
 windowed = true
 name = "cat-vs-rat-game"
