@@ -76,17 +76,20 @@ jobs:
           name: ${{ matrix.artifact_name }}
           path: release-artifacts/
 
-      - name: Print Hello
-        run: |
-          echo "1st Hello from GitHub Actions!"
-          echo "Repository: ${{ github.repository }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Triggered by: ${{ github.actor }}"
-          echo "Current date:"
-          date
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
 
-      - name: List files
-        run: ls -la
-
-      - name: Success
-        run: echo "✅ Workflow completed successfully!"
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/cat-vs-rat-game-windows/cat-vs-rat-game-windows.exe
+            release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos
+            release-artifacts/cat-vs-rat-game-linux/cat-vs-rat-game-linux
