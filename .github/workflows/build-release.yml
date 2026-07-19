@@ -63,7 +63,14 @@ jobs:
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
-          uv run pyinstaller --clean --windowed --onedir --name cat-vs-rat-game src/game.py
+          uv run pyinstaller --clean --windowed --onedir --strip --name cat-vs-rat-game src/game.py
+
+      - name: Sign macOS binary
+        shell: bash
+        working-directory: cat-vs-rat-game
+        if: runner.os == 'macOS'
+        run: |
+          codesign -s - -f --deep dist/cat-vs-rat-game.app
 
       - name: Prepare artifact
         shell: bash
