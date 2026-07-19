@@ -75,7 +75,7 @@ jobs:
           elif [ "$RUNNER_OS" = "macOS" ]; then
             ditto -c -k --sequesterRsrc dist/cat-vs-rat-game.app release-artifacts/${{ matrix.asset_name }}.zip
           else
-            cp dist/cat-vs-rat-game release-artifacts/${{ matrix.asset_name }}
+            cp -r dist/cat-vs-rat-game release-artifacts/${{ matrix.asset_name }}
           fi
 
       - name: Upload artifact
