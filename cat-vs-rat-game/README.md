@@ -51,6 +51,8 @@ To build a standalone macOS application bundle:
 uv run pyinstaller --clean --windowed --name cat-vs-rat-game src/game.py
 ```
 
+## Build a Windows executable
+
 To build a standalone Windows executable:
 
 ```bash
