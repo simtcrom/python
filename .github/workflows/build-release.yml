@@ -59,6 +59,13 @@ jobs:
         run: |
           uv run pytest -q
 
+      - name: Show versions
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          uv run python --version
+          uv run pyinstaller --version
+
       - name: Build binary
         shell: bash
         working-directory: cat-vs-rat-game
@@ -72,6 +79,15 @@ jobs:
         run: |
           codesign -s - -f --deep dist/cat-vs-rat-game.app
 
+      - name: Show build sizes
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          echo "=== dist ==="
+          ls -lh dist
+          echo
+          du -sh dist/*
+          
       - name: Prepare artifact
         shell: bash
         working-directory: cat-vs-rat-game
@@ -84,6 +100,12 @@ jobs:
           else
             cd dist && zip -r ../release-artifacts/${{ matrix.asset_name }}.zip cat-vs-rat-game
           fi
+
+      - name: Show zip size
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          ls -lh release-artifacts        
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
