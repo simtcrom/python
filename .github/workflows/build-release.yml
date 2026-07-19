@@ -97,6 +97,7 @@ jobs:
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name || 'v0.1.0' }}
           files: |
             release-artifacts/cat-vs-rat-game-linux/cat-vs-rat-game-linux
             release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos
