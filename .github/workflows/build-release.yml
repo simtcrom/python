@@ -71,9 +71,9 @@ jobs:
         run: |
           mkdir -p release-artifacts
           if [ "$RUNNER_OS" = "Windows" ]; then
-            cp dist/cat-vs-rat-game.exe release-artifacts/${{ matrix.asset_name }}
+            cp dist/cat-vs-rat-game.exe release-artifacts/${{ matrix.asset_name }}.exe
           elif [ "$RUNNER_OS" = "macOS" ]; then
-            cp -r dist/cat-vs-rat-game.app release-artifacts/${{ matrix.asset_name }}.app
+            ditto -c -k --sequesterRsrc dist/cat-vs-rat-game.app release-artifacts/${{ matrix.asset_name }}.zip
           else
             cp dist/cat-vs-rat-game release-artifacts/${{ matrix.asset_name }}
           fi
@@ -100,4 +100,4 @@ jobs:
           tag_name: ${{ github.event.release.tag_name || 'v0.1.0' }}
           files: |
             release-artifacts/cat-vs-rat-game-linux/cat-vs-rat-game-linux
-            release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos.app
+            release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos.zip
