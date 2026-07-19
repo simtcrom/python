@@ -9,6 +9,19 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: cat-vs-rat-game-linux
+            asset_name: cat-vs-rat-game-linux
+          - os: windows-latest
+            artifact_name: cat-vs-rat-game-windows
+            asset_name: cat-vs-rat-game-windows.exe
+          - os: macos-latest
+            artifact_name: cat-vs-rat-game-macos
+            asset_name: cat-vs-rat-game-macos    
 
     steps:
       - name: Checkout repository
