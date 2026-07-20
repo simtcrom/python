@@ -8,12 +8,6 @@ on:
 permissions:
   contents: write
 
-# on:
-#   workflow_dispatch:
-#   push:
-#     branches:
-#       - main
-      
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -23,26 +17,43 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: cat-vs-rat-game-linux
-            asset_name: cat-vs-rat-game-linux
+            asset_name: cat-vs-rat-game-linux-amd64
+
           # - os: windows-latest
           #   artifact_name: cat-vs-rat-game-windows
-          #   asset_name: cat-vs-rat-game-windows.exe
-          - os: 
-            - self-hosted
-            - macOS
-            - ARM64
+          #   asset_name: cat-vs-rat-game-windows-amd64
+
+          - os:
+              - self-hosted
+              - macOS
+              - ARM64
             artifact_name: cat-vs-rat-game-macos
-            asset_name: cat-vs-rat-game-macos
+            asset_name: cat-vs-rat-game-macos-arm64
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Read project version
+        shell: bash
+        working-directory: cat-vs-rat-game
+        run: |
+          VERSION=$(python3 - <<'EOF'
+          import tomllib
+
+          with open("pyproject.toml", "rb") as f:
+              print("v" + tomllib.load(f)["project"]["version"])
+          EOF
+          )
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Building version: $VERSION"
+
       - name: Set up Python
         if: runner.environment != 'self-hosted'
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install build dependencies
         if: runner.environment != 'self-hosted'
@@ -68,7 +79,7 @@ jobs:
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
-          uv run python -c "import pygame; print(pygame.version.ver)"          
+          uv run python -c "import pygame; print(pygame.version.ver)"
 
       - name: Show packages
         shell: bash
@@ -87,12 +98,18 @@ jobs:
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
-          uv run pyinstaller --clean --windowed --onedir --strip --name cat-vs-rat-game src/game.py
+          uv run pyinstaller \
+            --clean \
+            --windowed \
+            --onedir \
+            --strip \
+            --name cat-vs-rat-game \
+            src/game.py
 
       - name: Sign macOS binary
+        if: runner.os == 'macOS'
         shell: bash
         working-directory: cat-vs-rat-game
-        if: runner.os == 'macOS'
         run: |
           codesign -s - -f --deep dist/cat-vs-rat-game.app
 
@@ -104,7 +121,7 @@ jobs:
           ls -lh dist
           echo
           du -sh dist/*
-          
+
       - name: Prepare artifact
         shell: bash
         working-directory: cat-vs-rat-game
@@ -112,23 +129,33 @@ jobs:
           mkdir -p release-artifacts
 
           if [ "$RUNNER_OS" = "Windows" ]; then
-            cp dist/cat-vs-rat-game.exe release-artifacts/${{ matrix.asset_name }}.exe
+
+            cp dist/cat-vs-rat-game.exe \
+              release-artifacts/${{ matrix.asset_name }}-${VERSION}.exe
 
           elif [ "$RUNNER_OS" = "macOS" ]; then
-            ditto -c -k --sequesterRsrc --keepParent \
+
+            ditto -c -k \
+              --sequesterRsrc \
+              --keepParent \
               dist/cat-vs-rat-game.app \
-              release-artifacts/${{ matrix.asset_name }}.zip
+              release-artifacts/${{ matrix.asset_name }}-${VERSION}.zip
 
           else
+
             cd dist
-            zip -r ../release-artifacts/${{ matrix.asset_name }}.zip cat-vs-rat-game
+
+            zip -r \
+              ../release-artifacts/${{ matrix.asset_name }}-${VERSION}.zip \
+              cat-vs-rat-game
+
           fi
 
       - name: Show zip size
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
-          ls -lh release-artifacts        
+          ls -lh release-artifacts
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -139,7 +166,9 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+
     if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -151,5 +180,5 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name || 'v0.1.0' }}
           files: |
-            release-artifacts/cat-vs-rat-game-linux/cat-vs-rat-game-linux
-            release-artifacts/cat-vs-rat-game-macos/cat-vs-rat-game-macos.zip
+            release-artifacts/cat-vs-rat-game-linux/*
+            release-artifacts/cat-vs-rat-game-macos/*
