@@ -189,6 +189,11 @@ jobs:
         with:
           path: release-artifacts
 
+      - name: Show downloaded artifacts
+        run: |
+          pwd
+          find release-artifacts -type f          
+
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
@@ -196,4 +201,4 @@ jobs:
           files: |
             release-artifacts/cat-vs-rat-game-linux/*
             release-artifacts/cat-vs-rat-game-macos/*
-            release-artifacts/cat-vs-rat-game-windo/*
+            release-artifacts/cat-vs-rat-game-windows/*
