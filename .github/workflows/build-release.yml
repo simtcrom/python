@@ -10,6 +10,8 @@ permissions:
 
 jobs:
   build:
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -35,6 +37,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Read project version
+        id: version
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
@@ -47,6 +50,7 @@ jobs:
           )
 
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Building version: $VERSION"
 
       - name: Set up Python
@@ -208,7 +212,7 @@ jobs:
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.release.tag_name || 'v0.1.0' }}
+          tag_name: ${{ github.event.release.tag_name || needs.build.outputs.version }}
           files: |
             release-artifacts/cat-vs-rat-game-linux/*
             release-artifacts/cat-vs-rat-game-macos/*
