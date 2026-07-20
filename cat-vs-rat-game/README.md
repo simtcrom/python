@@ -2,6 +2,8 @@
 
 A simple pygame game where a cat chases a rat across the screen. The objective is to collide with the rat to increase the score.
 
+![alt text](<Screenshot 2026-07-20 at 10.01.54 PM.png>)
+
 ## Requirements
 
 - Python 3.11+
