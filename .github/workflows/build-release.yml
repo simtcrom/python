@@ -98,13 +98,27 @@ jobs:
         shell: bash
         working-directory: cat-vs-rat-game
         run: |
-          uv run pyinstaller \
-            --clean \
-            --windowed \
-            --onedir \
-            --strip \
-            --name cat-vs-rat-game \
-            src/game.py
+          if [ "$RUNNER_OS" = "Windows" ]; then
+
+            uv run pyinstaller \
+              --clean \
+              --windowed \
+              --onefile \
+              --strip \
+              --name cat-vs-rat-game \
+              src/game.py
+
+          else
+
+            uv run pyinstaller \
+              --clean \
+              --windowed \
+              --onedir \
+              --strip \
+              --name cat-vs-rat-game \
+              src/game.py
+
+          fi
 
       - name: Sign macOS binary
         if: runner.os == 'macOS'
@@ -182,4 +196,4 @@ jobs:
           files: |
             release-artifacts/cat-vs-rat-game-linux/*
             release-artifacts/cat-vs-rat-game-macos/*
-            release-artifacts/cat-vs-rat-game-windows/*
+            release-artifacts/cat-vs-rat-game-windo/*
