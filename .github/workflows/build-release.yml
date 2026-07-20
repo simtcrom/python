@@ -19,9 +19,9 @@ jobs:
             artifact_name: cat-vs-rat-game-linux
             asset_name: cat-vs-rat-game-linux-amd64
 
-          # - os: windows-latest
-          #   artifact_name: cat-vs-rat-game-windows
-          #   asset_name: cat-vs-rat-game-windows-amd64
+          - os: windows-latest
+            artifact_name: cat-vs-rat-game-windows
+            asset_name: cat-vs-rat-game-windows-amd64
 
           - os:
               - self-hosted
@@ -182,3 +182,4 @@ jobs:
           files: |
             release-artifacts/cat-vs-rat-game-linux/*
             release-artifacts/cat-vs-rat-game-macos/*
+            release-artifacts/cat-vs-rat-game-windows/*
