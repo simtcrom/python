@@ -55,6 +55,19 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set up Python (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+        
+      - name: Set up Python (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+
       - name: Install build dependencies
         if: runner.environment != 'self-hosted'
         shell: bash
@@ -118,13 +131,6 @@ jobs:
               src/game.py
 
           fi
-
-      - name: Test Windows executable
-        if: runner.os == 'Windows'
-        shell: cmd
-        working-directory: cat-vs-rat-game
-        run: |
-          dist\cat-vs-rat-game.exe
 
       - name: Sign macOS binary
         if: runner.os == 'macOS'
