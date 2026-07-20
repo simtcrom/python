@@ -104,7 +104,6 @@ jobs:
               --clean \
               --windowed \
               --onefile \
-              --strip \
               --name cat-vs-rat-game \
               src/game.py
 
@@ -119,6 +118,13 @@ jobs:
               src/game.py
 
           fi
+
+      - name: Test Windows executable
+        if: runner.os == 'Windows'
+        shell: cmd
+        working-directory: cat-vs-rat-game
+        run: |
+          dist\cat-vs-rat-game.exe
 
       - name: Sign macOS binary
         if: runner.os == 'macOS'
@@ -180,7 +186,6 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-
     if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
 
     steps:
@@ -192,12 +197,12 @@ jobs:
       - name: Show downloaded artifacts
         run: |
           pwd
-          find release-artifacts -type f          
+          find release-artifacts -type f
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.release.tag_name || 'v0.1.0' }}
+          tag_name: ${{ github.event.release.tag_name || env.VERSION }}
           files: |
             release-artifacts/cat-vs-rat-game-linux/*
             release-artifacts/cat-vs-rat-game-macos/*
