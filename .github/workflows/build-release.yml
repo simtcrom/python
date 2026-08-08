@@ -55,19 +55,19 @@ jobs:
 
       - name: Set up Python
         if: runner.environment != 'self-hosted'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
       - name: Set up Python (Windows)
         if: runner.os == 'Windows'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
         
       - name: Set up Python (Linux)
         if: runner.os == 'Linux'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
